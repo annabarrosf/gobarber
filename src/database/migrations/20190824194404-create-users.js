@@ -40,7 +40,7 @@ module.exports = {
       }
     });
   },
-
+  // tem que retirar o sequelize do down
   down: queryInterface => {
     return queryInterface.dropTable('users');
   }

@@ -23,5 +23,5 @@ class App {
     this.server.use(routes);
   }
 }
-// esportar o server do app
+// exportar o server do app
 module.exports = new App().server;

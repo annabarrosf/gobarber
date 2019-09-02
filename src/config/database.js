@@ -6,8 +6,8 @@ module.exports = {
   database: 'GoBarber',
   host: '127.0.0.1',
   dialect: 'postgres',
-  
-  //define o padrao de tabelas e colunas
+
+  // define o padrao de tabelas e colunas
   define: {
     timestamps: true,
     underscored: true,

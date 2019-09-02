@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-//gera o hash da senha
+// gera o hash da senha
 import bcrypt from 'bcryptjs';
 // define a clase users
 class Users extends Model {

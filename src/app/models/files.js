@@ -7,10 +7,7 @@ class Files extends Model {
       // colunas que vao ser inseridas pelo usuário. virtual n existe no banco de dados
       {
         name: Sequelize.STRING,
-        email: Sequelize.STRING,
-        password: Sequelize.VIRTUAL,
-        password_hash: Sequelize.STRING,
-        provider: Sequelize.BOOLEAN
+        path: Sequelize.STRING
       },
       {
         sequelize

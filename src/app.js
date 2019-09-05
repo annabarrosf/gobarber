@@ -1,6 +1,6 @@
 // importar o express do node_modules
 import express from 'express';
-
+import path from 'path';
 // importar o routes do arquivo routes
 import routes from './routes';
 // impportar
@@ -17,6 +17,10 @@ class App {
   middlewares() {
     // diz que a aplicação recebe requisições no formato json
     this.server.use(express.json());
+    this.server.use(
+      '/files',
+      express.static(path.resolve(__dirname, '..', 'temp', 'uploads'))
+    );
   }
 
   routes() {

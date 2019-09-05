@@ -7,7 +7,11 @@ class Files extends Model {
       // colunas que vao ser inseridas pelo usuário. virtual n existe no banco de dados
       {
         name: Sequelize.STRING,
-        path: Sequelize.STRING
+        path: Sequelize.STRING,
+        url: Sequelize.VIRTUAL,
+        get() {
+          return `http://localhost:8080/files/${this.path}`;
+        }
       },
       {
         sequelize

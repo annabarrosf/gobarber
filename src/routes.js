@@ -8,6 +8,7 @@ import multerConfig from './config/multer';
 import FileController from './app/controllers/FileController';
 import AppointmentController from './app/controllers/AppointmentController';
 import ScheduleController from './app/controllers/ScheduleController';
+import NotificationController from './app/controllers/NotificationsController';
 
 // declara a variavel routes para definir as rotas
 const routes = new Router();
@@ -25,6 +26,11 @@ routes.post('/appointments', AppointmentController.store);
 routes.get('/appointments', AppointmentController.index);
 
 routes.get('/schedule', ScheduleController.index);
+
+routes.get('/notifications', NotificationController.index);
+routes.put('/notifications/:id', NotificationController.update);
+
+routes.delete('/appointments/:id', AppointmentController.delete);
 
 // exporta rota
 export default routes;

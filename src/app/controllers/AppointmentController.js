@@ -1,10 +1,11 @@
-import { startOfHour, parseISO, isBefore, format } from 'date-fns';
+import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
 import Yup from 'yup';
 import pt from 'date-fns/locale/pt';
 import Appointments from '../models/appointments';
 import Users from '../models/users';
 import Files from '../models/files';
 import Notification from '../Schemas/Notifications';
+import Mail from '../../Lib/mail';
 
 // criando agendamento de serviços
 // validção de agendamento
@@ -29,6 +30,14 @@ class AppointmentController {
     if (!isProvider) {
       return res.status(401).json({
         error: 'Você só pode criar agendamento sendo Provider'
+      });
+    }
+
+    // checagem para que o usuário n agende com ele mesmo.
+
+    if (req.user_id === provider_id) {
+      return res.status(401).json({
+        error: 'Você não pode agendar com você mesmo!'
       });
     }
 
@@ -102,6 +111,43 @@ class AppointmentController {
     });
 
     return res.json(appointments);
+  }
+
+  async delete(req, res) {
+    const appointment = await Appointments.findByPk(req.prams.id, {
+      include: [
+        {
+          model: Users,
+          as: 'provider',
+          attributes: ['name', 'email']
+        }
+      ]
+    });
+
+    if (appointment.user_id !== req.userId) {
+      return res.status(401).json({
+        error: 'Você não tem permissão para cancelar este agendamento'
+      });
+    }
+    const dateWhitSub = subHours(appointment.date, 2);
+
+    if (isBefore(dateWhitSub, new Date())) {
+      return res.status(401).json({
+        error: 'Você só pode cancelar até 2 horas antes do agendamento'
+      });
+    }
+
+    appointment.canceled_at = new Date();
+
+    await appointment.save();
+
+    await Mail.sendMail({
+      to: `{apointment.provider.name}<${appointment.provider.email}>`,
+      subject: 'Agendamento cancelado',
+      text: 'Você tem um cancelamento'
+    });
+
+    return res.json(appointment);
   }
 }
 export default new AppointmentController();

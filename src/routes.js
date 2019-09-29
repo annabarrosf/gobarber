@@ -9,6 +9,7 @@ import FileController from './app/controllers/FileController';
 import AppointmentController from './app/controllers/AppointmentController';
 import ScheduleController from './app/controllers/ScheduleController';
 import NotificationController from './app/controllers/NotificationsController';
+import AvailabeController from './app/controllers/AvailabeController';
 
 // declara a variavel routes para definir as rotas
 const routes = new Router();
@@ -31,6 +32,8 @@ routes.get('/notifications', NotificationController.index);
 routes.put('/notifications/:id', NotificationController.update);
 
 routes.delete('/appointments/:id', AppointmentController.delete);
+
+routes.get('/providers/:providerId/availabe', AvailabeController.index);
 
 // exporta rota
 export default routes;

@@ -5,7 +5,8 @@ import Appointments from '../models/appointments';
 import Users from '../models/users';
 import Files from '../models/files';
 import Notification from '../Schemas/Notifications';
-import Mail from '../../Lib/mail';
+import Queue from '../../Lib/Queue';
+import CancellationMail from '../jobs/CancellationMail';
 
 // criando agendamento de serviços
 // validção de agendamento
@@ -97,7 +98,7 @@ class AppointmentController {
           {
             model: Users,
             as: 'provider',
-            attributes: ['id', 'name'],
+            attributes: ['id', 'name', 'past', 'cancelable'],
             include: [
               {
                 model: Files,
@@ -146,17 +147,8 @@ class AppointmentController {
 
     await appointment.save();
 
-    await Mail.sendMail({
-      to: `{apointment.provider.name}<${appointment.provider.email}>`,
-      subject: 'Agendamento cancelado',
-      template: 'cancellation',
-      context: {
-        provider: appointment.provider.name,
-        user: appointment.user.name,
-        date: format(appointment.date, "'dia' dd 'de' MMM, 'às' H:mm 'h'", {
-          locale: pt
-        })
-      }
+    await Queue.add(CancellationMail.key, {
+      appointment
     });
 
     return res.json(appointment);

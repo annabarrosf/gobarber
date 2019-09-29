@@ -1,5 +1,5 @@
 // verifica se o usuario está logado
 export default {
-  secret: '3e7adc015822072c9512be6179ba9d8b',
+  secret: process.env.APP_SECRET,
   expiresIn: '1d'
 };
